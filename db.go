@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"sync"
 
 	"github.com/starkandwayne/goutils/log"
 )
@@ -11,9 +12,9 @@ type DB struct {
 	Driver string
 	DSN    string
 
+	exclusive        sync.Mutex
 	connection *sql.DB
-	qCache     map[string]*sql.Stmt
-	qAlias     map[string]string
+	cache     map[string]*sql.Stmt
 }
 
 func (db *DB) Copy() *DB {
@@ -39,11 +40,8 @@ func (db *DB) Connect() error {
 	}
 
 	db.connection = connection
-	if db.qCache == nil {
-		db.qCache = make(map[string]*sql.Stmt)
-	}
-	if db.qAlias == nil {
-		db.qAlias = make(map[string]string)
+	if db.cache == nil {
+		db.cache = make(map[string]*sql.Stmt)
 	}
 	return nil
 }
@@ -55,20 +53,17 @@ func (db *DB) Disconnect() error {
 			return err
 		}
 		db.connection = nil
-		db.qCache = make(map[string]*sql.Stmt)
+		db.cache = make(map[string]*sql.Stmt)
 	}
 	return nil
 }
 
-// Register a SQL query alias
-func (db *DB) Alias(name string, sql string) error {
-	db.qAlias[name] = sql
-	return nil
-}
-
 // Execute a named, non-data query (INSERT, UPDATE, DELETE, etc.)
-func (db *DB) Exec(sql_or_name string, args ...interface{}) error {
-	s, err := db.statement(sql_or_name)
+func (db *DB) Exec(sql string, args ...interface{}) error {
+	db.exclusive.Lock()
+	defer db.exclusive.Unlock()
+
+	s, err := db.statement(sql)
 	if err != nil {
 		return err
 	}
@@ -83,8 +78,11 @@ func (db *DB) Exec(sql_or_name string, args ...interface{}) error {
 }
 
 // Execute a named, data query (SELECT)
-func (db *DB) Query(sql_or_name string, args ...interface{}) (*sql.Rows, error) {
-	s, err := db.statement(sql_or_name)
+func (db *DB) Query(sql string, args ...interface{}) (*sql.Rows, error) {
+	db.exclusive.Lock()
+	defer db.exclusive.Unlock()
+
+	s, err := db.statement(sql)
 	if err != nil {
 		return nil, err
 	}
@@ -99,8 +97,8 @@ func (db *DB) Query(sql_or_name string, args ...interface{}) (*sql.Rows, error) 
 }
 
 // Execute a data query (SELECT) and return how many rows were returned
-func (db *DB) Count(sql_or_name string, args ...interface{}) (uint, error) {
-	r, err := db.Query(sql_or_name, args...)
+func (db *DB) Count(sql string, args ...interface{}) (uint, error) {
+	r, err := db.Query(sql, args...)
 	if err != nil {
 		return 0, err
 	}
@@ -113,35 +111,24 @@ func (db *DB) Count(sql_or_name string, args ...interface{}) (uint, error) {
 	return n, nil
 }
 
-// Transparently resolve SQL aliases to real SQL query text
-func (db *DB) resolve(sql_or_name string) string {
-	if sql, ok := db.qAlias[sql_or_name]; ok {
-		return sql
-	}
-	return sql_or_name
-}
-
 // Return the prepared Statement for a given SQL query
-func (db *DB) statement(sql_or_name string) (*sql.Stmt, error) {
-	sql := db.resolve(sql_or_name)
+func (db *DB) statement(sql string) (*sql.Stmt, error) {
 	if db.connection == nil {
 		return nil, fmt.Errorf("Not connected to database")
 	}
 
 	log.Debugf("Executing SQL: %s", sql)
+	fmt.Printf("Executing SQL: %s\n", sql)
 
-	q, ok := db.qCache[sql]
+	q, ok := db.cache[sql]
 	if !ok {
 		stmt, err := db.connection.Prepare(sql)
 		if err != nil {
 			return nil, err
 		}
-		db.qCache[sql] = stmt
+		db.cache[sql] = stmt
 	}
 
-	q, ok = db.qCache[sql]
-	if !ok {
-		return nil, fmt.Errorf("Weird bug: query '%s' is still not properly prepared", sql)
-	}
+	q, _ = db.cache[sql]
 	return q, nil
 }
