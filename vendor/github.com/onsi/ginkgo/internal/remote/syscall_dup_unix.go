@@ -1,5 +1,7 @@
 // +build !linux !arm64
+// +build !linux !riscv64
 // +build !windows
+// +build !solaris
 
 package remote
 

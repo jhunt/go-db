@@ -3,9 +3,13 @@ module github.com/jhunt/db
 go 1.13
 
 require (
-	github.com/mattn/go-sqlite3 v1.1.1-0.20160514122348-38ee283dabf1
-	github.com/onsi/ginkgo v1.2.1-0.20160613123615-059cec02d342
-	github.com/onsi/gomega v0.0.0-20160613123253-3e93f011213c
+	github.com/mattn/go-sqlite3 v2.0.3+incompatible
+	github.com/onsi/ginkgo v1.12.0
+	github.com/onsi/gomega v1.9.0
 	github.com/starkandwayne/goutils v0.0.0-20151201174107-2ed57be1d349
-	gopkg.in/yaml.v2 v2.0.0-20160301204022-a83829b6f129 // indirect
+	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
+	golang.org/x/sys v0.0.0-20200202164722-d101bd2416d5 // indirect
+	golang.org/x/text v0.3.2 // indirect
+	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
+	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
