@@ -56,6 +56,9 @@ func (s *Schema) Current(d *DB) (int, error) {
 		if err.Error() == `pq: relation "schema_info" does not exist` {
 			return 0, nil
 		}
+		if err.Error() == `Error 1146: Table 'optigit.schema_info' doesn't exist` {
+			return 0, nil
+		}
 		return 0, err
 	}
 	defer r.Close()
