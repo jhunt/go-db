@@ -1,0 +1,10 @@
+github.com/mattn/go-sqlite3 v1.1.1-0.20160514122348-38ee283dabf1 h1:h808yN0vzMNyekOZGLRM3OiB8BBLgNqE180rKydRh8U=
+github.com/mattn/go-sqlite3 v1.1.1-0.20160514122348-38ee283dabf1/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
+github.com/onsi/ginkgo v1.2.1-0.20160613123615-059cec02d342 h1:fIhGTbyiz2RTr3AyK6peHegy3bP+4Tne039olUN1yYw=
+github.com/onsi/ginkgo v1.2.1-0.20160613123615-059cec02d342/go.mod h1:lLunBs/Ym6LB5Z9jYTR76FiuTmxDTDusOGeTQH+WWjE=
+github.com/onsi/gomega v0.0.0-20160613123253-3e93f011213c h1:mwu/V8lgB6unLyig9hcaEH+carHoGgNDsShyvCzJY8A=
+github.com/onsi/gomega v0.0.0-20160613123253-3e93f011213c/go.mod h1:C1qb7wdrVGGVU+Z6iS04AVkA3Q65CEZX59MT0QO5uiA=
+github.com/starkandwayne/goutils v0.0.0-20151201174107-2ed57be1d349 h1:XshZ842D/My9AhtIHZ+Ib8ElmV3721KDb3aKzeChtpQ=
+github.com/starkandwayne/goutils v0.0.0-20151201174107-2ed57be1d349/go.mod h1:Py4V645l0xZXsyvSR6WIcsGhNQEiIFDlmJ4Xwd6UCws=
+gopkg.in/yaml.v2 v2.0.0-20160301204022-a83829b6f129 h1:RBgb9aPUbZ9nu66ecQNIBNsA7j3mB5h8PNDIfhPjaJg=
+gopkg.in/yaml.v2 v2.0.0-20160301204022-a83829b6f129/go.mod h1:JAlM8MvJe8wmxCU4Bli9HhUf9+ttbYbLASfIpnQbh74=
