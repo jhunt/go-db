@@ -1,4 +1,4 @@
-module github.com/jhunt/db
+module github.com/jhunt/go-db
 
 go 1.13
 

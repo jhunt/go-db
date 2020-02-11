@@ -8,7 +8,7 @@ import (
 	// sql drivers
 	_ "github.com/mattn/go-sqlite3"
 
-	. "github.com/jhunt/db"
+	. "github.com/jhunt/go-db"
 )
 
 var _ = Describe("Database", func() {
