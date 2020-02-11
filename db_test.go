@@ -104,19 +104,6 @@ var _ = Describe("Database", func() {
 				Ω(numberOfThingsIn(r)).Should(Equal(13))
 			})
 
-			It("can alias queries", func() {
-				Ω(db.Alias("new-thing", `INSERT INTO things (type, number) VALUES ($1, 0)`)).Should(Succeed())
-				Ω(db.Alias("increment", `UPDATE things SET number = number + $1 WHERE type = $2`)).Should(Succeed())
-				Ω(db.Alias("how-many", `SELECT number FROM things WHERE type = "monkey"`)).Should(Succeed())
-
-				Ω(db.Exec("new-thing", "monkey")).Should(Succeed())
-				Ω(db.Exec("increment", 13, "monkey")).Should(Succeed())
-
-				r, err := db.Query("how-many")
-				Ω(err).Should(Succeed())
-				Ω(numberOfThingsIn(r)).Should(Equal(13))
-			})
-
 			It("can run arbitrary SQL", func() {
 				Ω(db.Exec("INSERT INTO things (type, number) VALUES ($1, $2)", "lion", 3)).
 					Should(Succeed())
