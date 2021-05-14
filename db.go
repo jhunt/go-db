@@ -12,9 +12,9 @@ type DB struct {
 	Driver string
 	DSN    string
 
-	exclusive        sync.Mutex
+	exclusive  sync.Mutex
 	connection *sql.DB
-	cache     map[string]*sql.Stmt
+	cache      map[string]*sql.Stmt
 }
 
 func (db *DB) Copy() *DB {
@@ -118,7 +118,6 @@ func (db *DB) statement(sql string) (*sql.Stmt, error) {
 	}
 
 	log.Debugf("Executing SQL: %s", sql)
-	fmt.Printf("Executing SQL: %s\n", sql)
 
 	q, ok := db.cache[sql]
 	if !ok {
