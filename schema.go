@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 )
 
@@ -56,7 +57,7 @@ func (s *Schema) Current(d *DB) (int, error) {
 		if err.Error() == `pq: relation "schema_info" does not exist` {
 			return 0, nil
 		}
-		if err.Error() == `Error 1146: Table 'optigit.schema_info' doesn't exist` {
+		if match, _ := regexp.MatchString("Error 1146: Table '.*' doesn't exist", err.Error()); match {
 			return 0, nil
 		}
 		return 0, err
